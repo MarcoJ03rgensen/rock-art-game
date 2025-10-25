@@ -168,8 +168,8 @@
                     <ellipse cx="400" cy="250" rx="150" ry="160" fill="#AFA090" class="wall-area selectable-wall" data-quality="smooth" opacity="0.9"/>
                     <ellipse cx="600" cy="250" rx="110" ry="130" fill="#8B7760" class="wall-area" data-quality="rough" opacity="0.8"/>
                     
-                    <!-- Texture overlay -->
-                    <rect x="0" y="0" width="800" height="500" filter="url(#roughTexture)" opacity="0.15"/>
+                    <!-- Texture overlay (non-interactive so underlying wall areas receive clicks) -->
+                    <rect x="0" y="0" width="800" height="500" filter="url(#roughTexture)" opacity="0.15" pointer-events="none"/>
                 </svg>
             </div>
 
@@ -222,14 +222,32 @@
                     <label>Paint Color:</label>
                     <div id="paintColors" class="color-palette"></div>
                 </div>
+
+                <div class="control-group">
+                    <label>Brush Size</label>
+                    <input id="brushSizeSlider" type="range" min="1" max="60" value="10">
+                </div>
+
+                <div class="control-group">
+                    <label>Opacity</label>
+                    <input id="brushOpacitySlider" type="range" min="0.05" max="1" step="0.05" value="0.6">
+                </div>
             </div>
 
             <div class="canvas-container">
+                <!-- Main painting canvas -->
                 <canvas id="paintCanvas" width="700" height="500"></canvas>
+                <!-- Particle overlay (dust motes) -->
+                <canvas id="particleCanvas" width="700" height="500" class="overlay-canvas"></canvas>
+                <!-- Dynamic light overlay (follows cursor) -->
+                <canvas id="lightCanvas" width="700" height="500" class="overlay-canvas"></canvas>
             </div>
 
             <div class="canvas-controls">
                 <button class="btn btn-secondary" onclick="game.clearCanvas()">Clear Canvas</button>
+                <button class="btn btn-secondary" id="undoBtn">Undo</button>
+                <button class="btn btn-secondary" id="eraserBtn">Eraser</button>
+                <button class="btn btn-secondary" id="exportBtn">Export PNG</button>
                 <button class="btn btn-secondary" onclick="game.showTemplate()">Show Template</button>
                 <button class="btn btn-secondary" onclick="game.hideTemplate()">Hide Template</button>
             </div>
@@ -258,6 +276,9 @@
                 <label class="lighting-control">
                     <input type="range" id="lightingSlider" min="0" max="100" value="100" oninput="game.adjustLighting(this.value)">
                     <span>Torch Light Effect</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="ambientToggle"> Ambient Sound
                 </label>
             </div>
 
